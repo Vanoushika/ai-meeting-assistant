@@ -11,7 +11,7 @@ function App() {
   const [meetingTitle, setMeetingTitle] = useState('Team Meeting')
   const [emailSent, setEmailSent] = useState(false)
 
-  const API_URL = 'http://localhost:8000'
+  const API_URL = 'https://ai-meeting-assistant-ll3f.onrender.com'
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0]
