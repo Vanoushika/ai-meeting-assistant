@@ -12,7 +12,7 @@ load_dotenv()
 
 app = FastAPI(title="AI Meeting Assistant API")
 
-# CORS - Updated to include port 5177
+# CORS - Updated to include Vercel domain
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -22,6 +22,7 @@ app.add_middleware(
         "http://127.0.0.1:5173",
         "http://127.0.0.1:5174",
         "http://127.0.0.1:5177",
+        "https://ai-meeting-assistant-tan.vercel.app",
         "https://*.vercel.app"
     ],
     allow_credentials=True,
