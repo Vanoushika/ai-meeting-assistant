@@ -10,10 +10,14 @@ body {
     sans-serif;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   min-height: 100vh;
-  padding: 20px;
+  padding: 140px 20px 30px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
 }
 
 .app {
+  width: 100%;
   max-width: 900px;
   margin: 0 auto;
 }
@@ -21,8 +25,9 @@ body {
 .container {
   background: white;
   border-radius: 20px;
-  padding: 40px;
+  padding: 50px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  width: 100%;
 }
 
 .header {
@@ -181,9 +186,14 @@ body {
   text-align: center;
 }
 
+/* Responsive Design */
 @media (max-width: 768px) {
+  body {
+    padding: 20px 10px;
+  }
+
   .container {
-    padding: 24px;
+    padding: 30px 20px;
   }
 
   .header h1 {
@@ -192,5 +202,15 @@ body {
 
   .card {
     padding: 20px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .app {
+    max-width: 1000px;
+  }
+  
+  .container {
+    padding: 60px;
   }
 }
