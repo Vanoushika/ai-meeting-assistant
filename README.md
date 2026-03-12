@@ -24,9 +24,7 @@
 
 ## 🎬 Demo
 
-![AI Meeting Assistant Demo](https://via.placeholder.com/800x450/667eea/ffffff?text=Upload+Your+Screenshot+Here)
-
-*Upload your own screenshot showing the app in action*
+![AI Meeting Assistant Demo](./screenshots/demo.png)
 
 ### Try It Live!
 
