@@ -302,8 +302,7 @@ This project is licensed under the MIT License - feel free to use it for your po
 **Anoushika**
 
 - GitHub: [@Vanoushika](https://github.com/Vanoushika)
-- LinkedIn: [Connect with me](https://linkedin.com/in/yourprofile)
-- Portfolio: [yourportfolio.com](https://yourportfolio.com)
+- LinkedIn: [https://www.linkedin.com/in/anoushika/)
 
 ---
 
