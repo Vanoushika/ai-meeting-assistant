@@ -4,7 +4,9 @@ from groq import Groq
 import os
 from dotenv import load_dotenv
 import tempfile
-import resend
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 from pydantic import BaseModel, EmailStr
 import traceback
 
@@ -32,7 +34,6 @@ app.add_middleware(
 
 # Initialize clients
 groq_client = Groq(api_key=os.getenv("GROQ_API_KEY"))
-resend.api_key = os.getenv("RESEND_API_KEY")
 
 class EmailRequest(BaseModel):
     email: EmailStr
@@ -211,19 +212,23 @@ async def send_summary_email(request: EmailRequest):
         </html>
         """
         
-        params = {
-            "from": os.getenv("SENDER_EMAIL", "onboarding@resend.dev"),
-            "to": [request.email],
-            "subject": f"Meeting Summary: {request.meeting_title}",
-            "html": email_html
-        }
-        
-        email_response = resend.Emails.send(params)
-        
+        sender_email = os.getenv("GMAIL_USER")
+        sender_password = os.getenv("GMAIL_APP_PASSWORD")
+
+        msg = MIMEMultipart("alternative")
+        msg["Subject"] = f"Meeting Summary: {request.meeting_title}"
+        msg["From"] = sender_email
+        msg["To"] = request.email
+        msg.attach(MIMEText(email_html, "html"))
+
+        with smtplib.SMTP("smtp.gmail.com", 587) as server:
+            server.starttls()
+            server.login(sender_email, sender_password)
+            server.sendmail(sender_email, request.email, msg.as_string())
+
         return {
             "success": True,
             "message": f"Summary sent to {request.email}",
-            "email_id": email_response.get("id")
         }
         
     except Exception as e:
