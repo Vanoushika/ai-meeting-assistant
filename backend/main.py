@@ -4,9 +4,8 @@ from groq import Groq
 import os
 from dotenv import load_dotenv
 import tempfile
-import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
 from pydantic import BaseModel, EmailStr
 import traceback
 
@@ -212,19 +211,15 @@ async def send_summary_email(request: EmailRequest):
         </html>
         """
         
-        sender_email = os.getenv("GMAIL_USER")
-        sender_password = os.getenv("GMAIL_APP_PASSWORD")
+        message = Mail(
+            from_email=os.getenv("SENDER_EMAIL"),
+            to_emails=request.email,
+            subject=f"Meeting Summary: {request.meeting_title}",
+            html_content=email_html,
+        )
 
-        msg = MIMEMultipart("alternative")
-        msg["Subject"] = f"Meeting Summary: {request.meeting_title}"
-        msg["From"] = sender_email
-        msg["To"] = request.email
-        msg.attach(MIMEText(email_html, "html"))
-
-        with smtplib.SMTP("smtp.gmail.com", 587) as server:
-            server.starttls()
-            server.login(sender_email, sender_password)
-            server.sendmail(sender_email, request.email, msg.as_string())
+        sg = SendGridAPIClient(os.getenv("SENDGRID_API_KEY"))
+        sg.send(message)
 
         return {
             "success": True,
