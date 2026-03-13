@@ -4,8 +4,8 @@ from groq import Groq
 import os
 from dotenv import load_dotenv
 import tempfile
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
+import sib_api_v3_sdk
+from sib_api_v3_sdk.rest import ApiException
 from pydantic import BaseModel, EmailStr
 import traceback
 
@@ -211,15 +211,21 @@ async def send_summary_email(request: EmailRequest):
         </html>
         """
         
-        message = Mail(
-            from_email=os.getenv("SENDER_EMAIL"),
-            to_emails=request.email,
+        configuration = sib_api_v3_sdk.Configuration()
+        configuration.api_key['api-key'] = os.getenv("BREVO_API_KEY")
+
+        api_instance = sib_api_v3_sdk.TransactionalEmailsApi(
+            sib_api_v3_sdk.ApiClient(configuration)
+        )
+
+        send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(
+            to=[{"email": request.email}],
+            sender={"email": os.getenv("SENDER_EMAIL"), "name": "AI Meeting Assistant"},
             subject=f"Meeting Summary: {request.meeting_title}",
             html_content=email_html,
         )
 
-        sg = SendGridAPIClient(os.getenv("SENDGRID_API_KEY"))
-        sg.send(message)
+        api_instance.send_transac_email(send_smtp_email)
 
         return {
             "success": True,
